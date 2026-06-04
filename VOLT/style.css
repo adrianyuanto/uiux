@@ -3048,7 +3048,7 @@ textarea.form-input {
 }
 
 .volt-promo-badge-corner::after {
-  content: '⚡';
+  content: '';
   position: absolute;
   bottom: -58px;
   right: 8px;
