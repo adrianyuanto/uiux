@@ -21,6 +21,7 @@
     initProcessAnimation();
     initParallax();
     initThemeToggle();
+    initLazyIframes();
   }
 
   // ---- PAGE LOADER ----
@@ -460,6 +461,45 @@
         }
       });
     }
+  }
+
+  // ---- LAZY LOADING IFRAMES ----
+  function initLazyIframes() {
+    const lazyIframes = document.querySelectorAll('.lazy-iframe');
+    if (!lazyIframes.length) return;
+
+    // Observer to LOAD iframe when it comes into view
+    const loadObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const iframe = entry.target;
+        if (entry.isIntersecting) {
+          if (!iframe.src && iframe.dataset.src) {
+            iframe.src = iframe.dataset.src;
+          }
+        }
+      });
+    }, {
+      rootMargin: '200px 0px',
+      threshold: 0
+    });
+
+    // Observer to UNLOAD iframe when it's far from view (save RAM)
+    const unloadObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const iframe = entry.target;
+        if (!entry.isIntersecting && iframe.src) {
+          iframe.src = '';
+        }
+      });
+    }, {
+      rootMargin: '800px 0px',
+      threshold: 0
+    });
+
+    lazyIframes.forEach(iframe => {
+      loadObserver.observe(iframe);
+      unloadObserver.observe(iframe);
+    });
   }
 
 })();
