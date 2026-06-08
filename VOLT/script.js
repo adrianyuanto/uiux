@@ -54,8 +54,10 @@
     }, { passive: true });
 
     // Active link highlight
-    const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+    const sections = Array.from(navLinks)
+      .map(link => document.querySelector(link.getAttribute('href')))
+      .filter(section => section !== null);
 
     if (sections.length && navLinks.length) {
       window.addEventListener('scroll', () => {
